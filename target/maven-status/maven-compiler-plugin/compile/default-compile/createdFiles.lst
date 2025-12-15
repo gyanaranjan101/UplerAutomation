@@ -1,0 +1,5 @@
+utils\UtilsMethods.class
+driver\DriverFactory.class
+pages\LoginPage.class
+utils\ScreenRecorderUtil.class
+pages\PimEmployeeLifecycle.class

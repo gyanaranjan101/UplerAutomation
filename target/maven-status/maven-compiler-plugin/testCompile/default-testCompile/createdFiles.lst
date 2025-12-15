@@ -1,0 +1,4 @@
+stepdefinitions\PimEmployeeLifeCycleStepDef.class
+stepdefinitions\loginPageStepDef.class
+hooks\Hooks.class
+runner\TestRunner.class
