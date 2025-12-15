@@ -11,8 +11,7 @@ public class ScreenRecorderUtil {
     private static BufferedWriter ffmpegWriter;
     private static String videoPath;
 
-    private static final DateTimeFormatter FORMATTER =
-            DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
 
     public static void startRecording(String scenarioName) {
 
@@ -41,8 +40,7 @@ public class ScreenRecorderUtil {
                     "-vcodec", "libx264",
                     "-preset", "ultrafast",
                     "-pix_fmt", "yuv420p",
-                    videoPath
-            );
+                    videoPath);
 
             builder.redirectErrorStream(true);
             recordingProcess = builder.start();
@@ -50,9 +48,7 @@ public class ScreenRecorderUtil {
             ffmpegWriter = new BufferedWriter(
                     new OutputStreamWriter(
                             recordingProcess.getOutputStream(),
-                            StandardCharsets.UTF_8
-                    )
-            );
+                            StandardCharsets.UTF_8));
 
             System.out.println("🎥 Screen recording started: " + videoPath);
 
@@ -73,8 +69,14 @@ public class ScreenRecorderUtil {
             }
 
             if (recordingProcess != null) {
-                recordingProcess.waitFor();
-                recordingProcess.destroy();
+
+                // ⏱ Wait MAX 3 seconds for FFmpeg to stop gracefully
+                boolean exited = recordingProcess.waitFor(3, java.util.concurrent.TimeUnit.SECONDS);
+
+                if (!exited) {
+                    System.out.println("⚠️ FFmpeg did not stop gracefully. Killing process...");
+                    recordingProcess.destroyForcibly(); // 💥 HARD KILL
+                }
             }
 
             System.out.println("🎬 Screen recording stopped");
@@ -86,4 +88,5 @@ public class ScreenRecorderUtil {
 
         return videoPath;
     }
+
 }

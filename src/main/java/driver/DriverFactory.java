@@ -12,8 +12,8 @@ public class DriverFactory {
         WebDriver webDriver = new ChromeDriver();
 
         webDriver.manage()
-                 .timeouts()
-                 .implicitlyWait(Duration.ofSeconds(10));
+                .timeouts()
+                .implicitlyWait(Duration.ofSeconds(10));
 
         webDriver.manage().window().maximize();
         driver.set(webDriver);
@@ -24,9 +24,14 @@ public class DriverFactory {
     }
 
     public static void quitDriver() {
-        if (driver.get() != null) {   // ✅ CRITICAL FIX
-            driver.get().quit();
+        WebDriver webDriver = driver.get();
+        if (webDriver != null) {
+            webDriver.quit();
             driver.remove();
+            System.out.println("✅ Browser closed successfully");
+        } else {
+            System.out.println("ℹ️ Driver already null");
         }
     }
+
 }
